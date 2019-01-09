@@ -70,7 +70,7 @@ printf("Group %d: ", i-96);
 			printf("\t %d free blocks, %d free inodes, %d used directories, %d unused inodes\n",(((gd.bg_free_blocks_count_hi) << 16) | gd.bg_free_blocks_count_lo),
 					(((gd.bg_free_inodes_count_hi) << 16) | gd.bg_free_inodes_count_lo),
 					(((gd.bg_used_dirs_count_hi) << 16) | gd.bg_used_dirs_count_lo),
-					10);
+					(((gd.bg_itable_unused_hi) << 16) | gd.bg_itable_unused_lo));
 #endif
 			printf("\t Checksum %x index %d\n\n", gd.bg_checksum,i-96);
 

@@ -80,7 +80,7 @@ int main (int argc, char *argv[])
 					(((gd.bg_free_blocks_count_hi) << 16) | gd.bg_free_blocks_count_lo),
 					(((gd.bg_free_inodes_count_hi) << 16) | gd.bg_free_inodes_count_lo),
 					(((gd.bg_used_dirs_count_hi) << 16) | gd.bg_used_dirs_count_lo),
-					-1);
+					(((gd.bg_itable_unused_hi) << 16) | gd.bg_itable_unused_lo));
 
 			printf("\t Checksum %x\n\n", gd.bg_checksum);
 
@@ -100,7 +100,7 @@ int main (int argc, char *argv[])
 
 	read(f, &ext4_inode, sizeof (struct ext4_inode));
 
-	printf (" pid %d \n", getpid());
+	printf ("pid %d \n", getpid());
 
 	while(1);
 }
