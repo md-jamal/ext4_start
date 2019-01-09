@@ -1,46 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <linux/fs.h>
-#include <linux/types.h>
-
-#define __nonstring
-
-#define DISK_NAME "/dev/sda3"
-//#define DISK_NAME "uma.ext4"
-
-struct ext4_group_desc
-{
-	__le32  bg_block_bitmap_lo; /* Blocks bitmap block */
-	__le32  bg_inode_bitmap_lo; /* Inodes bitmap block */
-	__le32  bg_inode_table_lo;  /* Inodes table block */
-	__le16  bg_free_blocks_count_lo;/* Free blocks count */
-	__le16  bg_free_inodes_count_lo;/* Free inodes count */
-	__le16  bg_used_dirs_count_lo;  /* Directories count */
-	__le16  bg_flags;       /* EXT4_BG_flags (INODE_UNINIT, etc) */
-	__le32  bg_exclude_bitmap_lo;   /* Exclude bitmap for snapshots */
-	__le16  bg_block_bitmap_csum_lo;/* crc32c(s_uuid+grp_num+bbitmap) LE */
-	__le16  bg_inode_bitmap_csum_lo;/* crc32c(s_uuid+grp_num+ibitmap) LE */
-	__le16  bg_itable_unused_lo;    /* Unused inodes count */         
-	__le16  bg_checksum;        /* crc16(sb_uuid+group+desc) */
-	__le32  bg_block_bitmap_hi; /* Blocks bitmap block MSB */
-	__le32  bg_inode_bitmap_hi; /* Inodes bitmap block MSB */
-	__le32  bg_inode_table_hi;  /* Inodes table block MSB */
-	__le16  bg_free_blocks_count_hi;/* Free blocks count MSB */
-	__le16  bg_free_inodes_count_hi;/* Free inodes count MSB */
-	__le16  bg_used_dirs_count_hi;  /* Directories count MSB */
-	__le16  bg_itable_unused_hi;    /* Unused inodes count MSB */
-	__le32  bg_exclude_bitmap_hi;   /* Exclude bitmap block MSB */
-	__le16  bg_block_bitmap_csum_hi;/* crc32c(s_uuid+grp_num+bbitmap) BE */
-	__le16  bg_inode_bitmap_csum_hi;/* crc32c(s_uuid+grp_num+ibitmap) BE */
-	__u32   bg_reserved;
-};
-
+#include "ext4.h"
 
 int get_gd_count (int fd)
 {
@@ -85,11 +43,13 @@ int main (int argc, char *argv[])
 
 	// leave out these x86 boot sector and padding && //readout superblock 
 
-	lseek(f, 64 * (sizeof(struct ext4_group_desc)/2), SEEK_CUR);
+	lseek(f, 32 * (sizeof(struct ext4_group_desc)), SEEK_CUR);
+
+	int size_of_gd = get_desc_size(f);
 
 	for (; index < gd_count; index++){
 
-		read(f, &gd, sizeof(struct ext4_group_desc)/2);
+		read(f, &gd, size_of_gd);
 
 		if  (gd.bg_checksum) {
 
