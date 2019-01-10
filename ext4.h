@@ -307,12 +307,12 @@ void print_gd_info(int group, struct ext4_group_desc *gd)
 			(((ext4_64_t)(gd->bg_inode_bitmap_hi) << 32) | gd->bg_inode_bitmap_lo),
 			(((ext4_64_t)(gd->bg_inode_table_hi) << 32)  | gd->bg_inode_table_lo));
 
-	printf("\t %llu free blocks, %llu free inodes, %llu used directories,"
-			" %llu unused inodes\n", 
-			(((ext4_64_t)(gd->bg_free_blocks_count_hi) << 16) | gd->bg_free_blocks_count_lo),
-			(((ext4_64_t)(gd->bg_free_inodes_count_hi) << 16) | gd->bg_free_inodes_count_lo),
-			(((ext4_64_t)(gd->bg_used_dirs_count_hi) << 16)   | gd->bg_used_dirs_count_lo),
-			(((ext4_64_t)(gd->bg_itable_unused_hi) << 16) 	  | gd->bg_itable_unused_lo));
+	printf("\t %u free blocks, %u free inodes, %u used directories,"
+			" %u unused inodes\n", 
+			(((unsigned int)(gd->bg_free_blocks_count_hi) << 16) | gd->bg_free_blocks_count_lo),
+			(((unsigned int)(gd->bg_free_inodes_count_hi) << 16) | gd->bg_free_inodes_count_lo),
+			(((unsigned int)(gd->bg_used_dirs_count_hi) << 16)   | gd->bg_used_dirs_count_lo),
+			(((unsigned int)(gd->bg_itable_unused_hi) << 16) 	  | gd->bg_itable_unused_lo));
 
 	printf("\t Checksum %x\n\n", gd->bg_checksum);
 }
