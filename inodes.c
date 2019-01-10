@@ -93,8 +93,8 @@ int main (int argc, char *argv[])
 
 			read(f, _Ibitmap, sizeof (_Ibitmap));
 
-			printf ("Itable at %d\n", itable);
-			printf ("Ibitmap at %d\n", Ibitmap);
+			DEBUG_EXT4 ("Itable at %d\n", itable);
+			DEBUG_EXT4 ("Ibitmap at %d\n", Ibitmap);
 
 			int loop_i = 0 ;
 			int loop_j = 0 ;
@@ -104,7 +104,7 @@ int main (int argc, char *argv[])
 					//							printf("%x\n",_Ibitmap[loop_i]);
 					for(loop_j=0; loop_j < sizeof(char)*8; loop_j++){
 						if (_Ibitmap[loop_i] & (1<<loop_j)) {
-							printf ("Inode busy %d\n", loop_i*8 + loop_j +1+(8192*group));
+							DEBUG_EXT4 ("Inode busy %d\n", loop_i*8 + loop_j +1+(8192*group));
 						}
 					}
 				}

@@ -100,7 +100,7 @@ int main (int argc, char *argv[])
 	int loop_index = 0 ;
 
 	for (index=1; index < EXT4_N_BLOCKS ; index++) {
-		printf (" block pointer. %d = %d\n", index, ext4_inode.i_block[index]);
+		DEBUG_EXT4 (" block pointer. %d = %d\n", index, ext4_inode.i_block[index]);
 		if (ext4_inode.i_block[index] > 30000) {
 			lseek(f, 0, SEEK_SET);
 			lseek(f, ext4_inode.i_block[index]*4096L, SEEK_CUR);

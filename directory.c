@@ -98,7 +98,7 @@ int main (int argc, char *argv[])
 	size_of_dir= ((ext4_inode.i_size_lo) |(ext4_64_t)(ext4_inode.i_size_high) <<32) ;
 
 	for (index=1; index < EXT4_N_BLOCKS  && tot_size < size_of_dir; index++) {
-		printf (" block pointer %d = %d\n", index, ext4_inode.i_block[index]);
+		DEBUG_EXT4 (" block pointer %d = %d\n", index, ext4_inode.i_block[index]);
 		if (ext4_inode.i_block[index] > 30) {
 			lseek(f, 0, SEEK_SET);
 			lseek(f, ext4_inode.i_block[index]*4096L, SEEK_CUR);
@@ -119,7 +119,7 @@ int main (int argc, char *argv[])
 	}
 #endif
 
-	printf (" pid %d \n", getpid());
+	printf ("pid %d \n", getpid());
 
 	while(1);
 }

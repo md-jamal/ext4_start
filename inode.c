@@ -76,7 +76,7 @@ int main (int argc, char *argv[])
 
 			itable = (((ext4_64_t)(gd.bg_inode_table_hi) << 32) | gd.bg_inode_table_lo);
 
-			printf ("Itable at %d\n", itable);
+			DEBUG_EXT4 ("Itable at %d\n", itable);
 
 			memset(&gd, 0, sizeof (gd));
 		}
