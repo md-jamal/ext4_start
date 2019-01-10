@@ -103,18 +103,31 @@ int main (int argc, char *argv[])
 #if 1
 	int loop_index = 0 ;
 
-	for (index=1; index < EXT4_N_BLOCKS ; index++) {
+	int size = 0;
+
+	int size_of_dir = 0 ;
+
+	int tot_size = 0;
+
+	size_of_dir= ((ext4_inode.i_size_lo) |( ext4_inode.i_size_high <<32)) ;
+
+	for (index=1; index < EXT4_N_BLOCKS  && tot_size < size_of_dir; index++) {
 		printf (" block pointer %d = %d\n", index, ext4_inode.i_block[index]);
-		if (ext4_inode.i_block[index] > 99999) {
+		if (ext4_inode.i_block[index] > 30) {
 			lseek(f, 0, SEEK_SET);
 			lseek(f, ext4_inode.i_block[index]*4096L, SEEK_CUR);
 
-			for (loop_index = 0; loop_index < 5 ; loop_index++) {
+			//for (loop_index = 0; loop_index < 5 ; loop_index++) {
+			size = 0 ;
+			while( size < 4096 ) {
 				read(f, &ext4_dir, sizeof (ext4_dir));
 				printf ("%.*s \n", ext4_dir.name_len, ext4_dir.name);
 				lseek(f, -(sizeof (ext4_dir) - ext4_dir.rec_len), SEEK_CUR);
-				//printf ("%llx\n", lseek(f, 0, SEEK_CUR));
+				size+=ext4_dir.rec_len;
 			}
+		 	tot_size += size ;
+				//printf ("%llx\n", lseek(f, 0, SEEK_CUR));
+			//}
 
 		}
 	}

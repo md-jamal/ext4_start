@@ -277,9 +277,6 @@ int get_desc_size(int f)
 	return size_of_gd ;
 }
 
-
-
- 
 void convert_epoch(time_t long_time)
 {
 	struct tm *newtime;
