@@ -5,7 +5,7 @@ int get_gd_count (int fd)
 	struct stat dev;
 	long long int size ;
 	int extra = 0 ;
-	
+
 	long int group_size = (128*1024*1024L);
 
 	if (ioctl(fd, BLKGETSIZE64, &size)) {
@@ -17,7 +17,7 @@ int get_gd_count (int fd)
 	}
 
 	extra = size % (128*1024*1024L);
-	
+
 	return (size/(group_size)) + (extra?1:0) ;
 }
 
@@ -69,39 +69,25 @@ int main (int argc, char *argv[])
 
 	int size_of_gd = get_desc_size(f);
 
-	printf ("%d group\n", group);
+	//printf ("%d group\n", group);
 
 	lseek(f, group*size_of_gd, SEEK_CUR);
 
 #if 1
-	
+
 	//for (; index < gd_count; index++){
 
 	read(f, &gd, size_of_gd);
 
 	if  (gd.bg_checksum /*&& index == group*/) {
 
-		printf("Group %d: ", group);
+		print_gd_info(group, &gd) ;
 
-		printf("block bitmap at %d, inode bitmap at %d, inode table at %d\n",
-				(((gd.bg_block_bitmap_hi) << 32) | gd.bg_block_bitmap_lo),
-				(((gd.bg_inode_bitmap_hi) << 32) | gd.bg_inode_bitmap_lo),
-				(((gd.bg_inode_table_hi) << 32) | gd.bg_inode_table_lo));
-
-		printf("\t %d free blocks, %d free inodes, %d used directories,"
-				" %d unused inodes\n", 
-				(((gd.bg_free_blocks_count_hi) << 16) | gd.bg_free_blocks_count_lo),
-				(((gd.bg_free_inodes_count_hi) << 16) | gd.bg_free_inodes_count_lo),
-				(((gd.bg_used_dirs_count_hi) << 16) | gd.bg_used_dirs_count_lo),
-				(((gd.bg_itable_unused_hi) << 16) | gd.bg_itable_unused_lo));
-
-		printf("\t Checksum %x\n\n", gd.bg_checksum);
-
-		itable = (((gd.bg_inode_table_hi) << 32) | gd.bg_inode_table_lo);
+		itable = (((ext4_64_t)(gd.bg_inode_table_hi) << 32) | gd.bg_inode_table_lo);
 
 		{
 
-			Ibitmap = (((gd.bg_inode_bitmap_hi) << 32) | gd.bg_inode_bitmap_lo) ;
+			Ibitmap = (((ext4_64_t)(gd.bg_inode_bitmap_hi) << 32) | gd.bg_inode_bitmap_lo) ;
 
 			lseek(f, Ibitmap*4096L,SEEK_SET);
 

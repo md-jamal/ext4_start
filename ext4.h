@@ -3,6 +3,7 @@
 
 #define DISK_NAME argv[1]
 //#define DISK_NAME "uma.ext4"
+typedef unsigned long long ext4_64_t ;
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,6 +15,7 @@
 #include <sys/types.h>
 #include <linux/fs.h>
 #include <linux/types.h>
+#include <sys/ioctl.h>
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
@@ -294,5 +296,24 @@ void convert_epoch(time_t long_time)
 
 	printf("%.19s, %i\n", asctime(newtime),
 			1900+newtime->tm_year);
+}
+
+void print_gd_info(int group, struct ext4_group_desc *gd)
+{
+	printf("Group %d: ", group);
+
+	printf("block bitmap at %llu, inode bitmap at %llu, inode table at %llu\n",
+			(((ext4_64_t)(gd->bg_block_bitmap_hi) << 32) | gd->bg_block_bitmap_lo),
+			(((ext4_64_t)(gd->bg_inode_bitmap_hi) << 32) | gd->bg_inode_bitmap_lo),
+			(((ext4_64_t)(gd->bg_inode_table_hi) << 32)  | gd->bg_inode_table_lo));
+
+	printf("\t %llu free blocks, %llu free inodes, %llu used directories,"
+			" %llu unused inodes\n", 
+			(((ext4_64_t)(gd->bg_free_blocks_count_hi) << 16) | gd->bg_free_blocks_count_lo),
+			(((ext4_64_t)(gd->bg_free_inodes_count_hi) << 16) | gd->bg_free_inodes_count_lo),
+			(((ext4_64_t)(gd->bg_used_dirs_count_hi) << 16)   | gd->bg_used_dirs_count_lo),
+			(((ext4_64_t)(gd->bg_itable_unused_hi) << 16) 	  | gd->bg_itable_unused_lo));
+
+	printf("\t Checksum %x\n\n", gd->bg_checksum);
 }
 #endif

@@ -70,23 +70,9 @@ int main (int argc, char *argv[])
 
 		if  (gd.bg_checksum && index == group) {
 
-			printf("Group %d: ", index);
+			print_gd_info(index, &gd) ;
 
-			printf("block bitmap at %d, inode bitmap at %d, inode table at %d\n",
-					(((gd.bg_block_bitmap_hi) << 32) | gd.bg_block_bitmap_lo),
-					(((gd.bg_inode_bitmap_hi) << 32) | gd.bg_inode_bitmap_lo),
-					(((gd.bg_inode_table_hi) << 32) | gd.bg_inode_table_lo));
-
-			printf("\t %d free blocks, %d free inodes, %d used directories,"
-					" %d unused inodes\n", 
-					(((gd.bg_free_blocks_count_hi) << 16) | gd.bg_free_blocks_count_lo),
-					(((gd.bg_free_inodes_count_hi) << 16) | gd.bg_free_inodes_count_lo),
-					(((gd.bg_used_dirs_count_hi) << 16) | gd.bg_used_dirs_count_lo),
-					(((gd.bg_itable_unused_hi) << 16) | gd.bg_itable_unused_lo));
-
-			printf("\t Checksum %x\n\n", gd.bg_checksum);
-
-			itable = (((gd.bg_inode_table_hi) << 32) | gd.bg_inode_table_lo);
+			itable = (((ext4_64_t)(gd.bg_inode_table_hi) << 32) | gd.bg_inode_table_lo);
 
 			memset(&gd, 0, sizeof (gd));
 		}
@@ -109,7 +95,7 @@ int main (int argc, char *argv[])
 
 	int tot_size = 0;
 
-	size_of_dir= ((ext4_inode.i_size_lo) |( ext4_inode.i_size_high <<32)) ;
+	size_of_dir= ((ext4_inode.i_size_lo) |(ext4_64_t)(ext4_inode.i_size_high) <<32) ;
 
 	for (index=1; index < EXT4_N_BLOCKS  && tot_size < size_of_dir; index++) {
 		printf (" block pointer %d = %d\n", index, ext4_inode.i_block[index]);

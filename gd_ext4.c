@@ -60,21 +60,7 @@ int main (int argc, char *argv[])
 
 		if  (gd.bg_checksum) {
 
-			printf("Group  %d: ", index);
-
-			printf("block bitmap at %d, inode bitmap at %d, inode table at %d\n",
-					(((gd.bg_block_bitmap_hi) << 32) | gd.bg_block_bitmap_lo),
-					(((gd.bg_inode_bitmap_hi) << 32) | gd.bg_inode_bitmap_lo),
-					(((gd.bg_inode_table_hi) << 32) | gd.bg_inode_table_lo));
-
-			printf("\t %d free blocks, %d free inodes, %d used directories,"
-					" %d unused inodes\n", 
-					(((gd.bg_free_blocks_count_hi) << 16) | gd.bg_free_blocks_count_lo),
-					(((gd.bg_free_inodes_count_hi) << 16) | gd.bg_free_inodes_count_lo),
-					(((gd.bg_used_dirs_count_hi) << 16) | gd.bg_used_dirs_count_lo),
-					(((gd.bg_itable_unused_hi) << 16) | gd.bg_itable_unused_lo));
-
-			printf("\t [Checksum 0x%04x]\n", gd.bg_checksum);
+			print_gd_info(index, &gd) ;
 
 			memset(&gd, 0, sizeof (gd));
 		}
