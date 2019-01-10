@@ -28,6 +28,11 @@ int main (int argc, char *argv[])
 	int index = 0;
 	struct ext4_group_desc gd ;
 
+	if (argc < 2) {
+		printf ("Give me Disk name \n");
+		return -1;
+	}
+
 	f = open(DISK_NAME, O_RDONLY);
 
 	if ( f == -1 ) {
@@ -36,6 +41,8 @@ int main (int argc, char *argv[])
 	}
 
 	int gd_count = get_gd_count(f);
+
+	memset(&gd, 0 , (sizeof(struct ext4_group_desc)));
 
 	//printf ("gd size %d\n", gd_count);
 
@@ -53,7 +60,7 @@ int main (int argc, char *argv[])
 
 		if  (gd.bg_checksum) {
 
-			printf("Group %d: ", index);
+			printf("Group  %d: ", index);
 
 			printf("block bitmap at %d, inode bitmap at %d, inode table at %d\n",
 					(((gd.bg_block_bitmap_hi) << 32) | gd.bg_block_bitmap_lo),
@@ -67,7 +74,7 @@ int main (int argc, char *argv[])
 					(((gd.bg_used_dirs_count_hi) << 16) | gd.bg_used_dirs_count_lo),
 					(((gd.bg_itable_unused_hi) << 16) | gd.bg_itable_unused_lo));
 
-			printf("\t Checksum %x\n\n", gd.bg_checksum);
+			printf("\t [Checksum 0x%04x]\n", gd.bg_checksum);
 
 			memset(&gd, 0, sizeof (gd));
 		}

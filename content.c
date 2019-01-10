@@ -24,7 +24,7 @@ int get_gd_count (int fd)
 void hexdump(char *buf, int size)
 {
 	int index = 0 ;
-	printf("entered %d\n", size);
+	//printf("entered %d\n", size);
 	for (; size ; size--)
 		printf("%c",*buf++);
 }
@@ -40,8 +40,8 @@ int main (int argc, char *argv[])
 
 	int f_size = 0;
 
-	if (argc < 2) {
-		printf ("Throw me an Inode boss !!\n");
+	if (argc < 3) {
+		printf ("Throw me an Disk name and Inode boss !!\n");
 		return 1;
 	}
 
@@ -52,7 +52,7 @@ int main (int argc, char *argv[])
 		return -1;
 	}
 
-	int inode = atoi(argv[1]) -1;
+	int inode = atoi(argv[2]) -1;
 
 	int group = inode/8192 ;
 
@@ -114,8 +114,8 @@ int main (int argc, char *argv[])
 	int loop_index = 0 ;
 
 	for (index=1; index < EXT4_N_BLOCKS ; index++) {
-		printf (" block pointer %d = %d\n", index, ext4_inode.i_block[index]);
-		if (ext4_inode.i_block[index] > 99999) {
+		printf (" block pointer. %d = %d\n", index, ext4_inode.i_block[index]);
+		if (ext4_inode.i_block[index] > 30000) {
 			lseek(f, 0, SEEK_SET);
 			lseek(f, ext4_inode.i_block[index]*4096L, SEEK_CUR);
 			if ( 1 && ( index < 12 )) {

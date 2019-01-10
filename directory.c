@@ -32,8 +32,8 @@ int main (int argc, char *argv[])
 	struct ext4_inode ext4_inode;
 	struct ext4_group_desc gd ;
 
-	if (argc < 2) {
-		printf ("Throw me an Inode boss !!\n");
+	if (argc < 3) {
+		printf ("Throw me an Disk name and Inode boss !!\n");
 		return 1;
 	}
 
@@ -44,7 +44,7 @@ int main (int argc, char *argv[])
 		return -1;
 	}
 
-	int inode = atoi(argv[1]) -1;
+	int inode = atoi(argv[2]) -1;
 
 	int group = inode/8192 ;
 

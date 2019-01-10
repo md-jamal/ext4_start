@@ -30,8 +30,8 @@ int main (int argc, char *argv[])
 	struct ext4_inode ext4_inode;
 	struct ext4_group_desc gd ;
 
-	if (argc < 2) {
-		printf ("Throw me an Inode boss !!\n");
+	if (argc < 3) {
+		printf ("Throw me an Disk name Inode boss !!\n");
 		return 1;
 	}
 
@@ -42,7 +42,11 @@ int main (int argc, char *argv[])
 		return -1;
 	}
 
-	int inode = atoi(argv[1]) -1;
+	memset(&ext4_inode, 0, sizeof (ext4_inode));
+
+	memset(&gd, 0, sizeof (gd));
+
+	int inode = atoi(argv[2]) -1;
 
 	int group = inode/8192 ;
 
@@ -86,7 +90,7 @@ int main (int argc, char *argv[])
 
 			itable = (((gd.bg_inode_table_hi) << 32) | gd.bg_inode_table_lo);
 
-			printf ("itable %d\n", itable);
+			printf ("Itable at %d\n", itable);
 
 			memset(&gd, 0, sizeof (gd));
 		}
@@ -101,6 +105,11 @@ int main (int argc, char *argv[])
 	read(f, &ext4_inode, sizeof (struct ext4_inode));
 
 	printf ("pid %d \n", getpid());
+
+	convert_epoch(ext4_inode.i_atime);
+	convert_epoch(ext4_inode.i_mtime);
+	convert_epoch(ext4_inode.i_ctime);
+	convert_epoch(ext4_inode.i_dtime);
 
 	while(1);
 }
