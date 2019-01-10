@@ -2,9 +2,9 @@
 #define EXT4_DEF
 
 #define DISK_NAME argv[1]
-//#define DISK_NAME "uma.ext4"
-typedef unsigned long long ext4_64_t ;
 #define DEBUG_EXT4(...) 
+
+typedef unsigned long long ext4_64_t ;
 
 #include <stdio.h>
 #include <stdlib.h>

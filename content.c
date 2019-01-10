@@ -97,35 +97,41 @@ int main (int argc, char *argv[])
 	read(f, &ext4_inode, sizeof (struct ext4_inode));
 
 	if ( ! S_ISLNK(ext4_inode.i_mode) && ! S_ISREG(ext4_inode.i_mode)) {
-			printf ("Not a Regular file\n");
-			return -1 ;
+		printf ("Not a Regular file\n");
+		return -1 ;
 	}
+
+	if (S_ISLNK(ext4_inode.i_mode)) {
+		char *uma = ext4_inode.i_block ;
+		printf ("%s\n", uma);
+	}else {
 
 #if 1
-	int loop_index = 0 ;
+		int loop_index = 0 ;
 
-	for (index=1; index < EXT4_N_BLOCKS ; index++) {
-		DEBUG_EXT4 (" block pointer. %d = %d\n", index, ext4_inode.i_block[index]);
-		if (ext4_inode.i_block[index] > 30000) {
-			lseek(f, 0, SEEK_SET);
-			lseek(f, ext4_inode.i_block[index]*4096L, SEEK_CUR);
-			if ( 1 && ( index < 12 )) {
-				
-	#if 1
-	if (ext4_inode.i_block[index-1] == 0)
-		ext4_inode.i_block[index-1] = 1 ;
-	if (ext4_inode.i_block[index-1] > 20)
-		ext4_inode.i_block[index-1] = 1 ;
-	#endif
-	for (loop_index=0; loop_index < ext4_inode.i_block[index-1] ; loop_index++) {
-				read(f, content, f_size = 
-										((ext4_inode.i_size_lo > sizeof(content))
-											?sizeof(content):ext4_inode.i_size_lo));
-				hexdump(content, f_size);
-	}
-				
+		for (index=1; index < EXT4_N_BLOCKS ; index++) {
+			DEBUG_EXT4 (" block pointer. %d = %d\n", index, ext4_inode.i_block[index]);
+			if (ext4_inode.i_block[index] > 30000) {
+				lseek(f, 0, SEEK_SET);
+				lseek(f, ext4_inode.i_block[index]*4096L, SEEK_CUR);
+				if ( 1 && ( index < 12 )) {
+
+#if 1
+					if (ext4_inode.i_block[index-1] == 0)
+						ext4_inode.i_block[index-1] = 1 ;
+					if (ext4_inode.i_block[index-1] > 20)
+						ext4_inode.i_block[index-1] = 1 ;
+#endif
+					for (loop_index=0; loop_index < ext4_inode.i_block[index-1] ; loop_index++) {
+						read(f, content, f_size = 
+								((ext4_inode.i_size_lo > sizeof(content))
+								 ?sizeof(content):ext4_inode.i_size_lo));
+						hexdump(content, f_size);
+					}
+
+				}
+
 			}
-
 		}
 	}
 #endif
