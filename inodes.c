@@ -101,7 +101,7 @@ int main (int argc, char *argv[])
 
 			for(; loop_i < sizeof (_Ibitmap); loop_i++) {
 				if (_Ibitmap[loop_i]) {
-					//							printf("%x\n",_Ibitmap[loop_i]);
+					//printf("%x\n",_Ibitmap[loop_i]);
 					for(loop_j=0; loop_j < sizeof(char)*8; loop_j++){
 						if (_Ibitmap[loop_i] & (1<<loop_j)) {
 							DEBUG_EXT4 ("Inode busy %d\n", loop_i*8 + loop_j +1+(8192*group));

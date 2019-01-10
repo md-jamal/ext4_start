@@ -90,6 +90,8 @@ int main (int argc, char *argv[])
 
 	read(f, &ext4_inode, sizeof (struct ext4_inode));
 
+	printf ("%d\n",S_ISDIR(ext4_inode.i_mode));
+
 	printf ("pid %d \n", getpid());
 
 	convert_epoch(ext4_inode.i_atime);

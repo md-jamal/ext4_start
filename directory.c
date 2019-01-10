@@ -86,6 +86,11 @@ int main (int argc, char *argv[])
 
 	read(f, &ext4_inode, sizeof (struct ext4_inode));
 
+	if ( ! S_ISDIR(ext4_inode.i_mode)) {
+			printf ("Not a Directory\n");
+			return -1 ;
+	}
+
 #if 1
 	int loop_index = 0 ;
 

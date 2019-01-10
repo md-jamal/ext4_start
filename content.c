@@ -96,6 +96,11 @@ int main (int argc, char *argv[])
 
 	read(f, &ext4_inode, sizeof (struct ext4_inode));
 
+	if ( ! S_ISLNK(ext4_inode.i_mode) && ! S_ISREG(ext4_inode.i_mode)) {
+			printf ("Not a Regular file\n");
+			return -1 ;
+	}
+
 #if 1
 	int loop_index = 0 ;
 
