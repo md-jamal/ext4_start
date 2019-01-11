@@ -44,6 +44,10 @@ int main (int argc, char *argv[])
 		return -1;
 	}
 
+	memset(&ext4_inode, 0, sizeof (ext4_inode));
+
+	memset(&gd, 0, sizeof (gd));
+
 	int inode = atoi(argv[2]) -1;
 
 	int group = inode/8192 ;

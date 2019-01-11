@@ -23,9 +23,9 @@ int get_gd_count (int fd)
 	return (size/(group_size)) + (extra?1:0) ;
 }
 
-#define DISK_NAME "/dev/nvme0n1p8"
+#define DISK_NAME "/dev/sda3"
 
-char path[] = "heihei/me/mIsc/ext4/gd_ext4.c" ;
+char path[] = "saraboju/mIsc/ext4/gd_ext4.c" ;
 
 int main (int argc, char *argv[])
 {
