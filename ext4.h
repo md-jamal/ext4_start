@@ -250,6 +250,103 @@ struct ext4_dir_entry_2 {
     char    name[EXT4_NAME_LEN];    /* File name */
 };
 
+typedef struct journal_header_s
+{
+    __be32      h_magic;
+    __be32      h_blocktype;
+    __be32      h_sequence;
+} journal_header_t;
+    
+
+
+typedef struct journal_superblock_s
+{
+/* 0x0000 */
+    journal_header_t s_header;
+    
+/* 0x000C */
+    /* Static information describing the journal */
+    __be32  s_blocksize;        /* journal device blocksize */
+    __be32  s_maxlen;       /* total blocks in journal file */
+    __be32  s_first;        /* first block of log information */
+    
+/* 0x0018 */
+    /* Dynamic information describing the current state of the log */
+    __be32  s_sequence;     /* first commit ID expected in log */
+    __be32  s_start;        /* blocknr of start of log */
+    
+/* 0x0020 */
+    /* Error value, as set by jbd2_journal_abort(). */
+    __be32  s_errno;
+    
+/* 0x0024 */
+    /* Remaining fields are only valid in a version-2 superblock */
+    __be32  s_feature_compat;   /* compatible feature set */
+    __be32  s_feature_incompat; /* incompatible feature set */
+    __be32  s_feature_ro_compat;    /* readonly-compatible feature set */
+/* 0x0030 */
+    __u8    s_uuid[16];     /* 128-bit uuid for journal */
+    
+/* 0x0040 */
+    __be32  s_nr_users;     /* Nr of filesystems sharing log */
+
+    __be32  s_dynsuper;     /* Blocknr of dynamic superblock copy*/
+    
+/* 0x0048 */
+    __be32  s_max_transaction;  /* Limit of journal blocks per trans.*/
+    __be32  s_max_trans_data;   /* Limit of data blocks per trans. */
+    
+/* 0x0050 */
+    __u8    s_checksum_type;    /* checksum type */
+    __u8    s_padding2[3];  
+    __u32   s_padding[42];
+    __be32  s_checksum;     /* crc32c(superblock) */
+    
+/* 0x0100 */
+    __u8    s_users[16*48];     /* ids of all fs'es sharing the log */
+/* 0x0400 */
+} journal_superblock_t;
+
+
+struct ext4_extent_tail {
+	__le32	et_checksum;	/* crc32c(uuid+inum+extent_block) */
+};
+
+/*
+ * This is the extent on-disk structure.
+ * It's used at the bottom of the tree.
+ */
+struct ext4_extent {
+	__le32	ee_block;	/* first logical block extent covers */
+	__le16	ee_len;		/* number of blocks covered by extent */
+	__le16	ee_start_hi;	/* high 16 bits of physical block */
+	__le32	ee_start_lo;	/* low 32 bits of physical block */
+};
+
+/*
+ * This is index on-disk structure.
+ * It's used at all the levels except the bottom.
+ */
+struct ext4_extent_idx {
+	__le32	ei_block;	/* index covers logical blocks from 'block' */
+	__le32	ei_leaf_lo;	/* pointer to the physical block of the next *
+				 * level. leaf or next index could be there */
+	__le16	ei_leaf_hi;	/* high 16 bits of physical block */
+	__u16	ei_unused;
+};
+
+/*
+ * Each block (leaves and indexes), even inode-stored has header.
+ */
+struct ext4_extent_header {
+	__le16	eh_magic;	/* probably will support different formats */
+	__le16	eh_entries;	/* number of valid entries */
+	__le16	eh_max;		/* capacity of store in entries */
+	__le16	eh_depth;	/* has tree real underlying blocks? */
+	__le32	eh_generation;	/* generation of the tree */
+};
+
+
 #define EXT4_FT_UNKNOWN     0
 #define EXT4_FT_REG_FILE    1
 #define EXT4_FT_DIR     2
