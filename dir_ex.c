@@ -38,6 +38,23 @@ void hexdump(char *buf, int size)
 
 struct ext4_dir_entry_2 ext4_dir ;
 
+char ft(char t)
+{
+	if (EXT4_FT_REG_FILE == t)
+		return 'f';
+	else if (EXT4_FT_DIR == t)
+		return 'd';
+	else if (EXT4_FT_SYMLINK == t)
+		return 'l';
+	else if (EXT4_FT_CHRDEV == t)
+		return 'c';
+	else if (EXT4_FT_BLKDEV == t)
+		return 'b';
+	else
+		return' ';
+}
+		
+
 void print_content_dir(int f, int length, unsigned long long off)
 {
 	unsigned long long _off = lseek(f, 0, SEEK_CUR);
@@ -63,7 +80,8 @@ void print_content_dir(int f, int length, unsigned long long off)
 		size = 0 ;
 		while( size < 4096 ) {
 			read(f, &ext4_dir, sizeof (ext4_dir));
-			printf ("%.*s \n", ext4_dir.name_len, ext4_dir.name);
+			printf ("%10d %c %.*s \n", ext4_dir.inode,ft(ext4_dir.file_type),
+											ext4_dir.name_len, ext4_dir.name);
 			lseek(f, -(sizeof (ext4_dir) - ext4_dir.rec_len), SEEK_CUR);
 			size+=ext4_dir.rec_len;
 		}
