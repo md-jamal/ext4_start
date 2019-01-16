@@ -49,14 +49,14 @@ void print_content(int f, int length, unsigned long long off)
 	int length_1 = 0; 
 
 	for(; j<length; j++) {
-	if ( (file_size-cur_size) > 4096)
+		if ( (file_size-cur_size) > 4096)
 			length_1 = 4096;
-	else
-		length_1 = file_size % 4096 ;
-		
-			read(f, buffer, length_1);
-			hexdump(buffer, length_1);
-			cur_size+=length_1;
+		else
+			length_1 = file_size % 4096 ;
+
+		read(f, buffer, length_1);
+		hexdump(buffer, length_1);
+		cur_size+=length_1;
 	}
 
 	lseek(f, _off, SEEK_SET);

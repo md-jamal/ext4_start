@@ -172,7 +172,6 @@ int main (int argc, char *argv[])
 
 	if ( ! S_ISLNK(ext4_inode.i_mode) && ! S_ISREG(ext4_inode.i_mode)) {
 		printf ("Not a Regular file\n");
-		return -1 ;
 	}
 
 	if (S_ISLNK(ext4_inode.i_mode)) {
