@@ -358,6 +358,36 @@ struct ext4_extent_header {
 #define EXT4_FT_MAX     8
 #define EXT4_FT_DIR_CSUM    0xDE
 
+int get_gd_count (int fd)
+{
+	struct stat dev;
+	long long int size ;
+	int extra = 0 ;
+
+	unsigned long long off = lseek(fd, 0, SEEK_CUR);
+
+	struct ext4_super_block es ;
+
+	lseek(fd, 1024, SEEK_SET);
+
+	read(fd, &es, sizeof(struct ext4_super_block));
+
+	long int group_size = (es.s_blocks_per_group*(1<<(10+es.s_log_block_size))*1L);
+
+	if (ioctl(fd, BLKGETSIZE64, &size)) {
+		if ( -1 == fstat(fd, &dev)) {
+			return -1 ;
+		} else {
+			size = dev.st_size ;
+		}
+	}
+
+	extra = size % group_size ;
+
+	lseek(fd, off, SEEK_SET);
+
+	return (size/(group_size)) + (extra?1:0) ;
+}
 int get_desc_size(int f)
 {
 	unsigned long long off = lseek(f, 0, SEEK_CUR);
@@ -383,14 +413,6 @@ void convert_epoch(time_t long_time)
 	char am_pm[] = "AM";
 
 	newtime = localtime(&long_time);
-	#if 0
-	if(newtime->tm_hour>12)
-		strcpy(am_pm,"PM");
-	if(newtime->tm_hour>12)
-		newtime->tm_hour-=12;
-	if(newtime->tm_hour ==0)
-		newtime->tm_hour=12;
-	#endif
 
 	printf("%.19s, %i\n", asctime(newtime),
 			1900+newtime->tm_year);

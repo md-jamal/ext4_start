@@ -3,27 +3,6 @@
 unsigned long long size_of_dir = 0;
 unsigned long long cur_size = 0;
 
-int get_gd_count (int fd)
-{
-	struct stat dev;
-	long long int size ;
-	int extra = 0 ;
-
-	long int group_size = (128*1024*1024L);
-
-	if (ioctl(fd, BLKGETSIZE64, &size)) {
-		if ( -1 == fstat(fd, &dev)) {
-			return -1 ;
-		} else {
-			size = dev.st_size ;
-		}
-	}
-
-	extra = size % (128*1024*1024L);
-
-	return (size/(group_size)) + (extra?1:0) ;
-}
-
 void hexdump(char *buf, int size)
 {
 	int index = 0 ;
@@ -126,14 +105,13 @@ int main (int argc, char *argv[])
 	int f;
 	int index = 0;
 	int itable ;
-	char content[4096] = {} ;
-	struct ext4_inode ext4_inode;
-	struct ext4_group_desc gd ;
 
-	struct ext4_extent_header eh ;
-	struct ext4_extent_idx    ehid;
+	struct ext4_inode         ext4_inode;
 	struct ext4_extent        ex ;
 	struct ext4_extent        *exp ;
+	struct ext4_extent_idx    ehid;
+	struct ext4_group_desc    gd ;
+	struct ext4_extent_header eh ;
 
 	int f_size = 0;
 

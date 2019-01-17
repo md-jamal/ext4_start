@@ -2,27 +2,6 @@
 
 struct ext4_dir_entry_2 ext4_dir ;
 
-int get_gd_count (int fd)
-{
-	struct stat dev;
-	long long int size ;
-	int extra = 0 ;
-	
-	long int group_size = (128*1024*1024L);
-
-	if (ioctl(fd, BLKGETSIZE64, &size)) {
-		if ( -1 == fstat(fd, &dev)) {
-			return -1 ;
-		} else {
-			size = dev.st_size ;
-		}
-	}
-
-	extra = size % (128*1024*1024L);
-	
-	return (size/(group_size)) + (extra?1:0) ;
-}
-
 #define DISK_NAME "/dev/sda3"
 
 char path[] = "saraboju/mIsc/ext4/gd_ext4.c" ;

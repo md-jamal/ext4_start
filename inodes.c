@@ -1,27 +1,5 @@
 #include "ext4.h"
 
-int get_gd_count (int fd)
-{
-	struct stat dev;
-	long long int size ;
-	int extra = 0 ;
-
-	long int group_size = (128*1024*1024L);
-
-	if (ioctl(fd, BLKGETSIZE64, &size)) {
-		if ( -1 == fstat(fd, &dev)) {
-			return -1 ;
-		} else {
-			size = dev.st_size ;
-		}
-	}
-
-	extra = size % (128*1024*1024L);
-
-	return (size/(group_size)) + (extra?1:0) ;
-}
-
-
 int main (int argc, char *argv[])
 {
 	int f;
@@ -104,7 +82,7 @@ int main (int argc, char *argv[])
 					//printf("%x\n",_Ibitmap[loop_i]);
 					for(loop_j=0; loop_j < sizeof(char)*8; loop_j++){
 						if (_Ibitmap[loop_i] & (1<<loop_j)) {
-							DEBUG_EXT4 ("Inode busy %d\n", loop_i*8 + loop_j +1+(8192*group));
+							printf ("Inode busy %d\n", loop_i*8 + loop_j +1+(8192*group));
 						}
 					}
 				}
